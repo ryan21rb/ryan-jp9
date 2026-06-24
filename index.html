@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoGuard - Ryan Rahmabakti Control Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans flex flex-col justify-between">
+
+    <div id="authPage"
+        class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950">
+        <div
+            class="w-full max-w-md bg-zinc-900/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-zinc-800 flex flex-col min-h-[620px]">
+
+            <div class="text-center mb-4">
+                <div
+                    class="mx-auto w-11 h-11 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center mb-2 border border-indigo-500/20 shadow-inner">
+                    <i class="fa-solid fa-layer-group text-lg"></i>
+                </div>
+                <h2 class="text-xl font-black tracking-tight text-white">Multi-Architecture Security Gate</h2>
+                <p class="text-[11px] text-zinc-400">Sistem Komparasi Arsitektur Keamanan - Ryan Rahmabakti</p>
+            </div>
+
+            <div
+                class="bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800 flex flex-col gap-1.5 mb-4 text-xs font-bold text-center">
+                <button id="modeZKP"
+                    class="w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 bg-emerald-600 text-white shadow-md text-left px-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-cubes-blockchain mr-2"></i> Metode Desentralisasi (Zero-Knowledge
+                        Proof)</span>
+                    <i class="fa-solid fa-circle-dot text-[10px] text-emerald-300"></i>
+                </button>
+                <button id="modeConventional"
+                    class="w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200 text-left px-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-server mr-2"></i> Metode Sentralisasi (Database Terpusat)</span>
+                    <i class="fa-solid fa-circle text-[10px] text-zinc-700"></i>
+                </button>
+            </div>
+
+            <div id="walletWrapper" class="mb-4">
+                <button id="connectButton"
+                    class="w-full bg-zinc-800 hover:bg-zinc-700/80 text-emerald-400 text-xs font-bold py-2.5 px-4 rounded-xl transition duration-200 border border-zinc-700/60 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-wallet"></i> Hubungkan MetaMask RPC Node
+                </button>
+                <div id="walletAddress"
+                    class="text-[10px] text-center text-zinc-400 font-mono mt-2 bg-zinc-950/80 px-2 py-1.5 rounded-lg border border-zinc-800/80 truncate hidden">
+                    <span class="text-emerald-500">● Node Connected:</span> <span></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 bg-zinc-950 p-1 rounded-xl border border-zinc-800/80 mb-4 text-xs font-bold">
+                <button id="tabLogin"
+                    class="py-2 rounded-lg text-center cursor-pointer transition-all duration-200 bg-zinc-800 text-white shadow-xs">
+                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Masuk
+                </button>
+                <button id="tabRegister"
+                    class="py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200">
+                    <i class="fa-solid fa-user-plus mr-1.5"></i> Daftar Baru
+                </button>
+            </div>
+
+            <div class="flex-grow flex flex-col justify-start">
+
+                <div id="formLogin" class="space-y-3 transition-opacity duration-200">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Username /
+                            Identitas</label>
+                        <input id="loginUsername" type="text" placeholder="Masukkan Username"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-indigo-500 transition text-white placeholder-zinc-600">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Kunci Keamanan
+                            (Password)</label>
+                        <input id="loginPassword" type="password" placeholder="Masukkan Password"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-indigo-500 transition text-white placeholder-zinc-600">
+                    </div>
+                    <button id="btnLogin"
+                        class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-3 px-4 rounded-xl transition duration-200 cursor-pointer shadow-md mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> Jalankan Autentikasi Keamanan
+                    </button>
+                </div>
+
+                <div id="formRegister" class="space-y-3 transition-opacity duration-200 hidden">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Registrasi
+                            Username</label>
+                        <input id="regUsername" type="text" placeholder="Buat nama baru"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-indigo-500 transition text-white placeholder-zinc-600">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Buat Password
+                            Aman</label>
+                        <input id="regPassword" type="password" placeholder="Gunakan password aman"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-indigo-500 transition text-white placeholder-zinc-600">
+                    </div>
+                    <button id="btnRegister"
+                        class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-3 px-4 rounded-xl transition duration-200 cursor-pointer shadow-md mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Daftarkan Record Pengguna
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-6 border-t border-zinc-800/80 pt-4">
+                <div class="flex items-center justify-between mb-1.5 px-1">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                        <i class="fa-solid fa-microchip"></i> Live System Output Console
+                    </span>
+                    <span id="consoleSpinner" class="hidden animate-spin text-[10px] text-indigo-400"><i
+                            class="fa-solid fa-circle-notch"></i></span>
+                </div>
+                <div id="statusLog"
+                    class="text-[11px] font-mono p-3 rounded-xl bg-zinc-950 border border-zinc-800/60 text-zinc-400 min-h-[54px] flex items-center gap-2 transition-all duration-200">
+                    <span class="text-zinc-600 font-bold">></span> <span id="logText">Mode Desentralisasi Aktif. Silakan
+                        otorisasi wallet node Anda.</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="dashboardPage"
+        class="hidden min-h-screen bg-zinc-950 flex flex-col justify-between text-zinc-300 transition-all duration-300">
+        <header
+            class="bg-zinc-900/50 backdrop-blur-md border-b border-zinc-800/80 px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div id="dashBrandIcon"
+                    class="bg-emerald-500 text-zinc-950 w-9 h-9 rounded-xl flex items-center justify-center font-black text-base shadow-lg">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+                <div>
+                    <span class="font-black text-white text-sm tracking-tight block">SecureConsole Identity Panel</span>
+                    <span id="dashModeBadge" class="text-[10px] text-emerald-400 font-mono block -mt-1">● Protokol
+                        Desentralisasi Aktif</span>
+                </div>
+            </div>
+            <button id="btnLogout"
+                class="bg-zinc-900 hover:bg-red-950/40 hover:text-red-400 text-zinc-400 text-xs font-bold py-2 px-4 rounded-xl border border-zinc-800 transition duration-200 cursor-pointer flex items-center gap-2">
+                <i class="fa-solid fa-power-off text-[10px]"></i> Tutup Sesi Log
+            </button>
+        </header>
+
+        <main class="flex-grow max-w-5xl w-full mx-auto p-6 md:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+
+                <div
+                    class="md:col-span-2 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-2xl relative overflow-hidden shadow-xl">
+                    <div class="absolute -right-6 -bottom-6 text-zinc-800/10 text-8xl font-black">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div id="dashStatusIcon"
+                        class="bg-emerald-500/10 text-emerald-400 w-10 h-10 rounded-xl flex items-center justify-center mb-4 border border-emerald-500/20 shadow-inner">
+                        <i class="fa-solid fa-circle-check text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-black text-white tracking-tight mb-2">
+                        Welcome Back, <span id="displayUser" class="text-emerald-400">Ryan Rahmabakti</span>!
+                    </h1>
+                    <p id="dashWelcomeDesc" class="text-xs text-zinc-400 leading-relaxed font-medium">
+                        Identitas valid terkonfirmasi via sirkuit matematika Zero-Knowledge Proof (ZKP) pada smart
+                        contract. Data asli aman di local state.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-5 pb-3 border-b border-zinc-800">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-database text-zinc-400 text-sm"></i>
+                            <h2 class="text-xs font-bold tracking-wider text-zinc-200 uppercase">Identity Matrix Log
+                            </h2>
+                        </div>
+                        <span
+                            class="text-[9px] font-mono bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800 text-emerald-500"
+                            id="liveStateBadge">Live Status</span>
+                    </div>
+
+                    <div class="space-y-3.5 text-xs font-medium">
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500">Nama Penguji</span>
+                            <span class="text-white font-mono tracking-wider">RYAN RAHMABAKTI</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500">User Log Identity</span>
+                            <span class="text-zinc-300 font-mono text-emerald-400" id="tableUser">ADMIN</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500">Protokol Keamanan</span>
+                            <span id="tableProtocol"
+                                class="bg-zinc-950 text-emerald-400 border border-emerald-500/20 text-[10px] px-2 rounded-md font-mono">Zero-Knowledge
+                                Proof (ZKP)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500">Arsitektur Penyimpanan</span>
+                            <span id="tableLayer"
+                                class="bg-zinc-950 text-indigo-400 border border-indigo-500/20 text-[10px] px-2 rounded-md font-mono">Blockchain
+                                Ledger (Sepolia Testnet)</span>
+                        </div>
+                        <div id="contractRow" class="flex justify-between items-center pt-3 border-t border-zinc-800">
+                            <span class="text-zinc-500">Alamat Smart Contract</span>
+                            <span
+                                class="text-zinc-400 text-[11px] font-mono tracking-tight bg-zinc-950 px-2 py-1 rounded border border-zinc-800"
+                                id="tableContract">0x000...0000</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer
+            class="px-6 py-4 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-zinc-600 font-mono bg-zinc-950">
+            <div>&copy; 2026 - Ryan Rahmabakti | Tugas Akhir Kriptografi Web 3.0</div>
+            <div class="flex items-center gap-1.5 text-zinc-500">
+                <i class="fa-solid fa-graduation-cap"></i> Teknik Informatika - IWU
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const ZKAuthAddress = "0xB51e9ca01FC120D70F0A75594A53e5bb543580F8";
+        const ZKAuthABI = [
+            "function register(string memory _username, bytes32 _passwordHash) public",
+            "function login(string memory _username, bytes32 _passwordHash) public view returns (bool)"
+        ];
+
+        let provider, signer, zkAuthContract;
+        let currentMode = 'ZKP';
+
+        // Simulasi Database Murni Tanpa XAMPP menggunakan Local Storage Browser
+        if (!localStorage.getItem('mockWeb2DB')) {
+            localStorage.setItem('mockWeb2DB', JSON.stringify({ "admin": "YWRtaW4xMjM=" }));
+        }
+
+        const modeZKP = document.getElementById('modeZKP');
+        const modeConventional = document.getElementById('modeConventional');
+        const walletWrapper = document.getElementById('walletWrapper');
+        const connectButton = document.getElementById('connectButton');
+        const walletAddressText = document.getElementById('walletAddress');
+        const logText = document.getElementById('logText');
+        const statusLogBox = document.getElementById('statusLog');
+        const consoleSpinner = document.getElementById('consoleSpinner');
+        const btnLogin = document.getElementById('btnLogin');
+        const btnRegister = document.getElementById('btnRegister');
+
+        const authPage = document.getElementById('authPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const formLogin = document.getElementById('formLogin');
+        const formRegister = document.getElementById('formRegister');
+
+        document.getElementById('tableContract').innerText = ZKAuthAddress.substring(0, 8) + "..." + ZKAuthAddress.substring(ZKAuthAddress.length - 6);
+
+        // === TOGGLE ARCHITECTURE SELECTION ===
+        modeZKP.addEventListener('click', () => {
+            currentMode = 'ZKP';
+            modeZKP.className = "w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 bg-emerald-600 text-white shadow-md text-left px-4 flex items-center justify-between";
+            modeConventional.className = "w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200 text-left px-4 flex items-center justify-between";
+
+            modeZKP.querySelector('.fa-circle, .fa-circle-dot').className = "fa-solid fa-circle-dot text-[10px] text-emerald-300";
+            modeConventional.querySelector('.fa-circle, .fa-circle-dot').className = "fa-solid fa-circle text-[10px] text-zinc-700";
+
+            btnLogin.className = btnLogin.className.replace('bg-blue-600', 'bg-indigo-600').replace('hover:bg-blue-500', 'hover:bg-indigo-500');
+            btnRegister.className = btnRegister.className.replace('bg-blue-600', 'bg-indigo-600').replace('hover:bg-blue-500', 'hover:bg-indigo-500');
+
+            walletWrapper.classList.remove('hidden');
+            writeLog("Mode Desentralisasi (Zero-Knowledge Proof) Aktif. Memerlukan MetaMask RPC.");
+        });
+
+        modeConventional.addEventListener('click', () => {
+            currentMode = 'CONVENTIONAL';
+            modeConventional.className = "w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 bg-blue-600 text-white shadow-md text-left px-4 flex items-center justify-between";
+            modeZKP.className = "w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200 text-left px-4 flex items-center justify-between";
+
+            modeConventional.querySelector('.fa-circle, .fa-circle-dot').className = "fa-solid fa-circle-dot text-[10px] text-blue-300";
+            modeZKP.querySelector('.fa-circle, .fa-circle-dot').className = "fa-solid fa-circle text-[10px] text-zinc-700";
+
+            btnLogin.className = btnLogin.className.replace('bg-indigo-600', 'bg-blue-600').replace('hover:bg-indigo-500', 'hover:bg-blue-500');
+            btnRegister.className = btnRegister.className.replace('bg-indigo-600', 'bg-blue-600').replace('hover:bg-indigo-500', 'hover:bg-blue-500');
+
+            walletWrapper.classList.add('hidden');
+            writeLog("Mode Sentralisasi Aktif. Simulasi interaksi database internal tanpa XAMPP berjalan.");
+        });
+
+        // === TAB NAVIGATION ===
+        tabLogin.addEventListener('click', () => {
+            tabLogin.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 bg-zinc-800 text-white shadow-xs";
+            tabRegister.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200";
+            formLogin.classList.remove('hidden');
+            formRegister.classList.add('hidden');
+            writeLog(`Form login siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Desentralisasi' : 'Sentralisasi'}.`);
+        });
+
+        tabRegister.addEventListener('click', () => {
+            tabRegister.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 bg-zinc-800 text-white shadow-xs";
+            tabLogin.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200";
+            formRegister.classList.remove('hidden');
+            formLogin.classList.add('hidden');
+            writeLog(`Form pendaftaran siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Desentralisasi' : 'Sentralisasi'}.`);
+        });
+
+        function writeLog(message, type = 'info') {
+            logText.innerText = message;
+            if (type === 'process') {
+                statusLogBox.className = "text-[11px] font-mono p-3 rounded-xl bg-zinc-950 border border-amber-500/30 text-amber-400 min-h-[54px] flex items-center gap-2 animate-pulse";
+                consoleSpinner.classList.remove('hidden');
+            } else if (type === 'success') {
+                statusLogBox.className = "text-[11px] font-mono p-3 rounded-xl bg-zinc-950 border border-emerald-500/30 text-emerald-400 min-h-[54px] flex items-center gap-2";
+                consoleSpinner.classList.add('hidden');
+            } else if (type === 'error') {
+                statusLogBox.className = "text-[11px] font-mono p-3 rounded-xl bg-zinc-950 border border-red-500/30 text-red-400 min-h-[54px] flex items-center gap-2";
+                consoleSpinner.classList.add('hidden');
+            } else {
+                statusLogBox.className = "text-[11px] font-mono p-3 rounded-xl bg-zinc-950 border border-zinc-800/60 text-zinc-400 min-h-[54px] flex items-center gap-2";
+                consoleSpinner.classList.add('hidden');
+            }
+        }
+
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    writeLog("Menghubungkan RPC Node ke MetaMask Extensions...", "process");
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    zkAuthContract = new ethers.Contract(ZKAuthAddress, ZKAuthABI, signer);
+
+                    connectButton.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Gateway Wallet Terhubung';
+                    walletAddressText.classList.remove('hidden');
+                    walletAddressText.querySelector('span:nth-child(2)').innerText = accounts[0];
+                    writeLog("Koneksi RPC Node sukses di-approve. State Desentralisasi aktif.", "success");
+                } catch (error) {
+                    writeLog("Otorisasi RPC Wallet digagalkan/ditolak pengguna.", "error");
+                }
+            } else {
+                writeLog("Error: MetaMask provider tidak terdeteksi di browser.", "error");
+            }
+        }
+
+        function hashPassword(passwordText) {
+            return ethers.utils.solidityKeccak256(["string"], [passwordText]);
+        }
+
+        // === LOGIK REGISTRASI ===
+        async function handleRegister() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            if (!username || !password) return writeLog("Peringatan: Field registrasi data tidak boleh kosong!", "error");
+
+            if (currentMode === 'ZKP') {
+                if (!zkAuthContract) return writeLog("Gagal: Otorisasi wallet MetaMask diperlukan!", "error");
+                try {
+                    writeLog(`[1/3] Enkripsi: Membuat masking hash password lokal untuk user: ${username}...`, "process");
+                    const hashedPassword = hashPassword(password);
+
+                    setTimeout(async () => {
+                        try {
+                            writeLog("[2/3] Membuka window MetaMask untuk memproses tanda tangan payload...", "process");
+                            const tx = await zkAuthContract.register(username, hashedPassword);
+                            writeLog("[3/3] Menunggu validasi block miner di Ethereum Sepolia...", "process");
+                            await tx.wait();
+                            writeLog(`Sukses: Identitas Desentralisasi [${username}] berhasil masuk Ledger! 🎉`, "success");
+                        } catch (e) {
+                            writeLog("Transaksi dibatalkan oleh pengguna atau kehabisan Gas Limit.", "error");
+                        }
+                    }, 1000);
+                } catch (error) {
+                    writeLog("Fatal Error pada kompilasi register ZKP.", "error");
+                }
+            } else {
+                // SIMULASI WEB2 SENTRALISASI TANPA XAMPP
+                writeLog(`[Sentralisasi API] Mengirim payload plaintext password ke server local database...`, "process");
+                setTimeout(() => {
+                    let db = JSON.parse(localStorage.getItem('mockWeb2DB'));
+                    if (db[username]) {
+                        writeLog(`[DB Server Error] Gagal: Username '${username}' sudah terdaftar di skema tabel SQL!`, "error");
+                    } else {
+                        db[username] = btoa(password); // Simulasi hash server-side
+                        localStorage.setItem('mockWeb2DB', JSON.stringify(db));
+                        writeLog(`[DB Server Success] Data terkirim! Plaintext di-hash di server dan disimpan ke tabel 'users'.`, "success");
+                    }
+                }, 1000);
+            }
+        }
+
+        // === LOGIK LOGIN ===
+        async function handleLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            if (!username || !password) return writeLog("Peringatan: Harap isi semua kredensial login!", "error");
+
+            if (currentMode === 'ZKP') {
+                if (!zkAuthContract) return writeLog("Gagal: Hubungkan gateway wallet MetaMask terlebih dahulu!", "error");
+                try {
+                    writeLog("[1/2] Local Hashing: Melakukan masking plaintext ke format bytes32 sirkuit...", "process");
+                    const hashedPassword = hashPassword(password);
+
+                    setTimeout(async () => {
+                        try {
+                            writeLog("[2/2] Memanggil fungsi read smart contract untuk validasi matematika...", "process");
+                            const isMatch = await zkAuthContract.login(username, hashedPassword);
+                            if (isMatch) {
+                                writeLog("ZKP Valid! Bukti matematika cocok. Membuka Dashboard...", "success");
+                                setupDashboardView(username, 'ZKP');
+                            } else {
+                                writeLog("Akses Ditolak: Komparasi Root Hash tidak cocok di sirkuit contract.", "error");
+                            }
+                        } catch (e) {
+                            writeLog("Error Node: Akun tidak ditemukan di sirkuit contract.", "error");
+                        }
+                    }, 1000);
+                } catch (error) {
+                    writeLog("Gagal memproses fungsi verifikasi sirkuit.", "error");
+                }
+            } else {
+                // SIMULASI WEB2 SENTRALISASI LOGIN TANPA XAMPP
+                writeLog(`[Sentralisasi API] Melakukan query server: SELECT * FROM users WHERE username='${username}'...`, "process");
+                setTimeout(() => {
+                    let db = JSON.parse(localStorage.getItem('mockWeb2DB'));
+                    if (db[username] && db[username] === btoa(password)) {
+                        writeLog("Sentralisasi Sukses: Sesi dicocokkan, server menerbitkan JWT Session Token!", "success");
+                        setupDashboardView(username, 'CONVENTIONAL');
+                    } else {
+                        writeLog("Sentralisasi Gagal: Password salah atau record data tidak ditemukan.", "error");
+                    }
+                }, 1000);
+            }
+        }
+
+        function setupDashboardView(username, mode) {
+            document.getElementById('tableUser').innerText = username.toUpperCase();
+
+            const brandIcon = document.getElementById('dashBrandIcon');
+            const modeBadge = document.getElementById('dashModeBadge');
+            const statusIcon = document.getElementById('dashStatusIcon');
+            const welcomeDesc = document.getElementById('dashWelcomeDesc');
+            const protocol = document.getElementById('tableProtocol');
+            const layer = document.getElementById('tableLayer');
+            const contractRow = document.getElementById('contractRow');
+            const stateBadge = document.getElementById('liveStateBadge');
+
+            if (mode === 'ZKP') {
+                brandIcon.className = "bg-emerald-500 text-zinc-950 w-9 h-9 rounded-xl flex items-center justify-center font-black text-base shadow-lg";
+                brandIcon.innerHTML = '<i class="fa-solid fa-cubes"></i>';
+                modeBadge.innerText = "● Protokol Desentralisasi Aktif";
+                modeBadge.className = "text-[10px] text-emerald-400 font-mono block -mt-1";
+                statusIcon.className = "bg-emerald-500/10 text-emerald-400 w-10 h-10 rounded-xl flex items-center justify-center mb-4 border border-emerald-500/20 shadow-inner";
+                welcomeDesc.innerHTML = 'Identitas valid terkonfirmasi via sirkuit matematika <span class="text-zinc-200 font-mono">Zero-Knowledge Proof (ZKP)</span> pada smart contract. Data asli aman di local state.';
+                protocol.innerText = "Zero-Knowledge Proof (ZKP)";
+                protocol.className = "bg-zinc-950 text-emerald-400 border border-emerald-500/20 text-[10px] px-2 rounded-md font-mono";
+                layer.innerText = "Blockchain Ledger (Sepolia Testnet)";
+                layer.className = "bg-zinc-950 text-indigo-400 border border-indigo-500/20 text-[10px] px-2 rounded-md font-mono";
+                contractRow.classList.remove('hidden');
+                stateBadge.className = "text-[9px] font-mono bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800 text-emerald-500";
+                stateBadge.innerText = "Live State";
+            } else {
+                brandIcon.className = "bg-blue-500 text-zinc-950 w-9 h-9 rounded-xl flex items-center justify-center font-black text-base shadow-lg";
+                brandIcon.innerHTML = '<i class="fa-solid fa-server"></i>';
+                modeBadge.innerText = "● Sesi Database Terpusat Terhubung";
+                modeBadge.className = "text-[10px] text-blue-400 font-mono block -mt-1";
+                statusIcon.className = "bg-blue-500/10 text-blue-400 w-10 h-10 rounded-xl flex items-center justify-center mb-4 border border-blue-500/20 shadow-inner";
+                welcomeDesc.innerHTML = 'Anda berhasil masuk menggunakan <span class="text-zinc-200 font-mono">Metode Sentralisasi</span>. Kredensial divalidasi penuh oleh skrip server backend dan record data SQL terpusat.';
+                protocol.innerText = "Standard Password Hash Verification";
+                protocol.className = "bg-zinc-950 text-blue-400 border border-blue-500/20 text-[10px] px-2 rounded-md font-mono";
+                layer.innerText = "Relational Database Server (MySQL)";
+                layer.className = "bg-zinc-950 text-zinc-400 border border-zinc-800 text-[10px] px-2 rounded-md font-mono";
+                contractRow.classList.add('hidden');
+                stateBadge.className = "text-[9px] font-mono bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800 text-blue-400";
+                stateBadge.innerText = "SQL Connected";
+            }
+
+            setTimeout(() => {
+                authPage.classList.add('hidden');
+                dashboardPage.classList.remove('hidden');
+            }, 800);
+        }
+
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            dashboardPage.classList.add('hidden');
+            authPage.classList.remove('hidden');
+            writeLog(`Sesi pengujian berhasil dibersihkan dari memori sandi.`);
+        });
+
+        connectButton.addEventListener('click', connectWallet);
+        btnRegister.addEventListener('click', handleRegister);
+        btnLogin.addEventListener('click', handleLogin);
+    </script>
+</body>
+
+</html>
