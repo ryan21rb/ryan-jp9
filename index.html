@@ -243,6 +243,12 @@
             "function register(string memory _username, bytes32 _passwordHash) public",
             "function login(string memory _username, bytes32 _passwordHash) public view returns (bool)"
         ];
+        
+        // Deteksi alamat server backend secara dinamis (lokal / hosting cPanel)
+        const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000'
+            : 'https://himaif-iwu.com/backend';
+
 
         let provider, signer, zkAuthContract;
         let currentMode = 'ZKP';
@@ -398,7 +404,7 @@
                 // SEKARANG MENEMBAK KE BACKEND MYSQL ASLI
                 writeLog(`[Sentralisasi API] Mengirim payload plaintext password ke server MySQL...`, "process");
 
-                fetch('https://himaif-iwu.com/backend', {
+                fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -464,7 +470,7 @@
                 // SEKARANG VERIFIKASI KE MYSQL ASLI
                 writeLog(`[Metode Sentralisasi API] Melakukan query SELECT ke database...`, "process");
 
-                fetch('https://himaif-iwu.com/backend', {
+                fetch(`${BACKEND_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })

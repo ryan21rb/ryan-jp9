@@ -44,7 +44,7 @@ function connectDatabase() {
             console.error("1. Pastikan IP Publik Anda sudah di-whitelist di menu 'Remote MySQL' di cPanel.");
             console.error("2. Pastikan username ('himaifiw_jp_9') dan nama database sudah sesuai.");
             console.error("====================================================");
-            
+
             db = null;
             // Coba lagi menghubungkan setelah 7 detik
             setTimeout(connectDatabase, 7000);
@@ -87,12 +87,12 @@ function connectDatabase() {
 
 connectDatabase();
 
-// API endpoint untuk Registrasi Konvensional
-app.post('/api/register', (req, res) => {
+// API endpoint untuk Registrasi Konvensional (mendukung lokal & subdirectory cPanel)
+app.post(['/api/register', '/backend/api/register'], (req, res) => {
     if (!db) {
-        return res.status(503).json({ 
-            success: false, 
-            error: "Database online belum siap. Pastikan konfigurasi Remote MySQL di cPanel sudah benar." 
+        return res.status(503).json({
+            success: false,
+            error: "Database online belum siap. Pastikan konfigurasi Remote MySQL di cPanel sudah benar."
         });
     }
     const { username, password } = req.body;
@@ -107,12 +107,12 @@ app.post('/api/register', (req, res) => {
     });
 });
 
-// API endpoint untuk Login Konvensional
-app.post('/api/login', (req, res) => {
+// API endpoint untuk Login Konvensional (mendukung lokal & subdirectory cPanel)
+app.post(['/api/login', '/backend/api/login'], (req, res) => {
     if (!db) {
-        return res.status(503).json({ 
-            success: false, 
-            error: "Database online belum siap. Pastikan konfigurasi Remote MySQL di cPanel sudah benar." 
+        return res.status(503).json({
+            success: false,
+            error: "Database online belum siap. Pastikan konfigurasi Remote MySQL di cPanel sudah benar."
         });
     }
     const { username, password } = req.body;
@@ -129,5 +129,6 @@ app.post('/api/login', (req, res) => {
         res.json({ success: true, message: "Sesi dicocokkan di MySQL Online!" });
     });
 });
-
-app.listen(3000, () => console.log("Backend Server running on http://localhost:3000"));
+// GANTI baris app.listen(3000) menjadi ini:
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Backend Server running on port ${PORT}`));
