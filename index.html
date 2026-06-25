@@ -398,7 +398,7 @@
                 // SEKARANG MENEMBAK KE BACKEND MYSQL ASLI
                 writeLog(`[Sentralisasi API] Mengirim payload plaintext password ke server MySQL...`, "process");
 
-                fetch('http://localhost:3000/api/register', {
+                fetch('https://himaif-iwu.com/backend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -464,7 +464,7 @@
                 // SEKARANG VERIFIKASI KE MYSQL ASLI
                 writeLog(`[Metode Sentralisasi API] Melakukan query SELECT ke database...`, "process");
 
-                fetch('http://localhost:3000/api/login', {
+                fetch('https://himaif-iwu.com/backend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
