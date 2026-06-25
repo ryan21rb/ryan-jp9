@@ -5,18 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoGuard - Ryan Rahmabakti Control Panel</title>
+    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Ethers.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="text/javascript"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans flex flex-col justify-between">
 
+    <!-- ================= SECTION 1: AUTH PAGE (SEBELUM LOGIN) ================= -->
     <div id="authPage"
         class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950">
         <div
             class="w-full max-w-md bg-zinc-900/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-zinc-800 flex flex-col min-h-[620px]">
 
+            <!-- Header Brand -->
             <div class="text-center mb-4">
                 <div
                     class="mx-auto w-11 h-11 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center mb-2 border border-indigo-500/20 shadow-inner">
@@ -26,6 +31,7 @@
                 <p class="text-[11px] text-zinc-400">Sistem Komparasi Arsitektur Keamanan - Ryan Rahmabakti</p>
             </div>
 
+            <!-- ARCHITECTURE PILIHAN MODE -->
             <div
                 class="bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800 flex flex-col gap-1.5 mb-4 text-xs font-bold text-center">
                 <button id="modeZKP"
@@ -41,6 +47,7 @@
                 </button>
             </div>
 
+            <!-- Wallet Status Wrapper -->
             <div id="walletWrapper" class="mb-4">
                 <button id="connectButton"
                     class="w-full bg-zinc-800 hover:bg-zinc-700/80 text-emerald-400 text-xs font-bold py-2.5 px-4 rounded-xl transition duration-200 border border-zinc-700/60 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
@@ -52,6 +59,7 @@
                 </div>
             </div>
 
+            <!-- Navigation Tabs -->
             <div class="grid grid-cols-2 bg-zinc-950 p-1 rounded-xl border border-zinc-800/80 mb-4 text-xs font-bold">
                 <button id="tabLogin"
                     class="py-2 rounded-lg text-center cursor-pointer transition-all duration-200 bg-zinc-800 text-white shadow-xs">
@@ -63,8 +71,10 @@
                 </button>
             </div>
 
+            <!-- Content Area (Form Container) -->
             <div class="flex-grow flex flex-col justify-start">
 
+                <!-- HALAMAN FORM LOGIN -->
                 <div id="formLogin" class="space-y-3 transition-opacity duration-200">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Username /
@@ -84,6 +94,7 @@
                     </button>
                 </div>
 
+                <!-- HALAMAN FORM REGISTRASI -->
                 <div id="formRegister" class="space-y-3 transition-opacity duration-200 hidden">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1">Registrasi
@@ -104,6 +115,7 @@
                 </div>
             </div>
 
+            <!-- CONSOLE MONITOR LOGS -->
             <div class="mt-6 border-t border-zinc-800/80 pt-4">
                 <div class="flex items-center justify-between mb-1.5 px-1">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
@@ -122,8 +134,10 @@
         </div>
     </div>
 
+    <!-- ================= SECTION 2: DASHBOARD PAGE (SETELAH LOGIN) ================= -->
     <div id="dashboardPage"
         class="hidden min-h-screen bg-zinc-950 flex flex-col justify-between text-zinc-300 transition-all duration-300">
+        <!-- Top Navigation Bar -->
         <header
             class="bg-zinc-900/50 backdrop-blur-md border-b border-zinc-800/80 px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -143,9 +157,11 @@
             </button>
         </header>
 
+        <!-- Main Dashboard Layout -->
         <main class="flex-grow max-w-5xl w-full mx-auto p-6 md:p-12">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
 
+                <!-- Sisi Kiri: Welcome Card -->
                 <div
                     class="md:col-span-2 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-2xl relative overflow-hidden shadow-xl">
                     <div class="absolute -right-6 -bottom-6 text-zinc-800/10 text-8xl font-black">
@@ -164,6 +180,7 @@
                     </p>
                 </div>
 
+                <!-- Sisi Kanan: Detail Data Matrix -->
                 <div class="md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-5 pb-3 border-b border-zinc-800">
                         <div class="flex items-center space-x-2">
@@ -209,6 +226,7 @@
             </div>
         </main>
 
+        <!-- Footer Identitas Permanen -->
         <footer
             class="px-6 py-4 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-zinc-600 font-mono bg-zinc-950">
             <div>&copy; 2026 - Ryan Rahmabakti | Tugas Akhir Kriptografi Web 3.0</div>
@@ -218,6 +236,7 @@
         </footer>
     </div>
 
+    <!-- ================= SECTION 3: JAVASCRIPT LOGIC ================= -->
     <script>
         const ZKAuthAddress = "0xB51e9ca01FC120D70F0A75594A53e5bb543580F8";
         const ZKAuthABI = [
@@ -266,7 +285,7 @@
             btnRegister.className = btnRegister.className.replace('bg-blue-600', 'bg-indigo-600').replace('hover:bg-blue-500', 'hover:bg-indigo-500');
 
             walletWrapper.classList.remove('hidden');
-            writeLog("Mode Desentralisasi (Zero-Knowledge Proof) Aktif. Memerlukan MetaMask RPC.");
+            writeLog("Metode Desentralisasi (Zero-Knowledge Proof) Aktif. Memerlukan MetaMask RPC.");
         });
 
         modeConventional.addEventListener('click', () => {
@@ -281,7 +300,7 @@
             btnRegister.className = btnRegister.className.replace('bg-indigo-600', 'bg-blue-600').replace('hover:bg-indigo-500', 'hover:bg-blue-500');
 
             walletWrapper.classList.add('hidden');
-            writeLog("Mode Sentralisasi Aktif. Simulasi interaksi database internal tanpa XAMPP berjalan.");
+            writeLog("Metode Sentralisasi Aktif. Simulasi interaksi database internal tanpa XAMPP berjalan.");
         });
 
         // === TAB NAVIGATION ===
@@ -290,7 +309,7 @@
             tabRegister.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200";
             formLogin.classList.remove('hidden');
             formRegister.classList.add('hidden');
-            writeLog(`Form login siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Desentralisasi' : 'Sentralisasi'}.`);
+            writeLog(`Form login siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Metode Desentralisasi' : 'Metode Sentralisasi'}.`);
         });
 
         tabRegister.addEventListener('click', () => {
@@ -298,7 +317,7 @@
             tabLogin.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200";
             formRegister.classList.remove('hidden');
             formLogin.classList.add('hidden');
-            writeLog(`Form pendaftaran siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Desentralisasi' : 'Sentralisasi'}.`);
+            writeLog(`Form pendaftaran siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Metode Desentralisasi' : 'Metode Sentralisasi'}.`);
         });
 
         function writeLog(message, type = 'info') {
@@ -361,7 +380,13 @@
                             const tx = await zkAuthContract.register(username, hashedPassword);
                             writeLog("[3/3] Menunggu validasi block miner di Ethereum Sepolia...", "process");
                             await tx.wait();
+
                             writeLog(`Sukses: Identitas Desentralisasi [${username}] berhasil masuk Ledger! 🎉`, "success");
+
+                            // ALERT NOTIFIKASI & OTOMATIS PINDAH TAB LOGIN
+                            alert(`Registrasi Berhasil!\nAkun Desentralisasi [${username}] telah sukses didaftarkan ke Blockchain Ledger Sepolia.\n\nSilakan masuk di halaman login.`);
+                            pindahKeTabLogin();
+
                         } catch (e) {
                             writeLog("Transaksi dibatalkan oleh pengguna atau kehabisan Gas Limit.", "error");
                         }
@@ -380,9 +405,27 @@
                         db[username] = btoa(password); // Simulasi hash server-side
                         localStorage.setItem('mockWeb2DB', JSON.stringify(db));
                         writeLog(`[DB Server Success] Data terkirim! Plaintext di-hash di server dan disimpan ke tabel 'users'.`, "success");
+
+                        // ALERT NOTIFIKASI & OTOMATIS PINDAH TAB LOGIN
+                        alert(`Registrasi Berhasil!\nAkun Sentralisasi [${username}] sukses disimpan ke skema tabel Database.\n\nSilakan masuk di halaman login.`);
+                        pindahKeTabLogin();
                     }
                 }, 1000);
             }
+        }
+
+        // Fungsi pembantu untuk otomatis memindahkan tab form ke Login
+        function pindahKeTabLogin() {
+            tabLogin.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 bg-zinc-800 text-white shadow-xs";
+            tabRegister.className = "py-2 rounded-lg text-center cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200";
+            formLogin.classList.remove('hidden');
+            formRegister.classList.add('hidden');
+
+            // Reset input register biar bersih
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+
+            writeLog(`Form login siap di bawah arsitektur ${currentMode === 'ZKP' ? 'Metode Desentralisasi' : 'Metode Sentralisasi'}.`);
         }
 
         // === LOGIK LOGIN ===
@@ -416,7 +459,7 @@
                 }
             } else {
                 // SIMULASI WEB2 SENTRALISASI LOGIN TANPA XAMPP
-                writeLog(`[Sentralisasi API] Melakukan query server: SELECT * FROM users WHERE username='${username}'...`, "process");
+                writeLog(`[Metode Sentralisasi API] Melakukan query server: SELECT * FROM users WHERE username='${username}'...`, "process");
                 setTimeout(() => {
                     let db = JSON.parse(localStorage.getItem('mockWeb2DB'));
                     if (db[username] && db[username] === btoa(password)) {
