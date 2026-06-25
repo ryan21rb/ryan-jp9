@@ -36,13 +36,13 @@
                 class="bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800 flex flex-col gap-1.5 mb-4 text-xs font-bold text-center">
                 <button id="modeZKP"
                     class="w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 bg-emerald-600 text-white shadow-md text-left px-4 flex items-center justify-between">
-                    <span><i class="fa-solid fa-cubes-blockchain mr-2"></i> Metode Desentralisasi (Zero-Knowledge
+                    <span><i class="fa-solid fa-cubes-blockchain mr-2"></i> Metode ZKP (Zero-Knowledge
                         Proof)</span>
                     <i class="fa-solid fa-circle-dot text-[10px] text-emerald-300"></i>
                 </button>
                 <button id="modeConventional"
                     class="w-full py-2.5 rounded-xl cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-200 text-left px-4 flex items-center justify-between">
-                    <span><i class="fa-solid fa-server mr-2"></i> Metode Sentralisasi (Database Terpusat)</span>
+                    <span><i class="fa-solid fa-server mr-2"></i> Metode Konversional (Database Terpusat)</span>
                     <i class="fa-solid fa-circle text-[10px] text-zinc-700"></i>
                 </button>
             </div>
@@ -395,22 +395,25 @@
                     writeLog("Fatal Error pada kompilasi register ZKP.", "error");
                 }
             } else {
-                // SIMULASI WEB2 SENTRALISASI TANPA XAMPP
-                writeLog(`[Sentralisasi API] Mengirim payload plaintext password ke server local database...`, "process");
-                setTimeout(() => {
-                    let db = JSON.parse(localStorage.getItem('mockWeb2DB'));
-                    if (db[username]) {
-                        writeLog(`[DB Server Error] Gagal: Username '${username}' sudah terdaftar di skema tabel SQL!`, "error");
-                    } else {
-                        db[username] = btoa(password); // Simulasi hash server-side
-                        localStorage.setItem('mockWeb2DB', JSON.stringify(db));
-                        writeLog(`[DB Server Success] Data terkirim! Plaintext di-hash di server dan disimpan ke tabel 'users'.`, "success");
+                // SEKARANG MENEMBAK KE BACKEND MYSQL ASLI
+                writeLog(`[Sentralisasi API] Mengirim payload plaintext password ke server MySQL...`, "process");
 
-                        // ALERT NOTIFIKASI & OTOMATIS PINDAH TAB LOGIN
-                        alert(`Registrasi Berhasil!\nAkun Sentralisasi [${username}] sukses disimpan ke skema tabel Database.\n\nSilakan masuk di halaman login.`);
-                        pindahKeTabLogin();
-                    }
-                }, 1000);
+                fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            writeLog(`[MySQL Success] Data masuk tabel 'users' di database 'jepe9_db'!`, "success");
+                            alert(`Registrasi Berhasil!\nAkun Sentralisasi [${username}] sukses disimpan ke MySQL.\n\nSilakan masuk di halaman login.`);
+                            pindahKeTabLogin();
+                        } else {
+                            writeLog(`[MySQL Error] Gagal: ${data.error}`, "error");
+                        }
+                    })
+                    .catch(() => writeLog("Gagal terhubung ke Backend Server. Pastikan server.js menyala!", "error"));
             }
         }
 
@@ -458,17 +461,24 @@
                     writeLog("Gagal memproses fungsi verifikasi sirkuit.", "error");
                 }
             } else {
-                // SIMULASI WEB2 SENTRALISASI LOGIN TANPA XAMPP
-                writeLog(`[Metode Sentralisasi API] Melakukan query server: SELECT * FROM users WHERE username='${username}'...`, "process");
-                setTimeout(() => {
-                    let db = JSON.parse(localStorage.getItem('mockWeb2DB'));
-                    if (db[username] && db[username] === btoa(password)) {
-                        writeLog("Sentralisasi Sukses: Sesi dicocokkan, server menerbitkan JWT Session Token!", "success");
-                        setupDashboardView(username, 'CONVENTIONAL');
-                    } else {
-                        writeLog("Sentralisasi Gagal: Password salah atau record data tidak ditemukan.", "error");
-                    }
-                }, 1000);
+                // SEKARANG VERIFIKASI KE MYSQL ASLI
+                writeLog(`[Metode Sentralisasi API] Melakukan query SELECT ke database...`, "process");
+
+                fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            writeLog("Sentralisasi Sukses: Sesi dicocokkan dengan MySQL!", "success");
+                            setupDashboardView(username, 'CONVENTIONAL');
+                        } else {
+                            writeLog(`Sentralisasi Gagal: ${data.message}`, "error");
+                        }
+                    })
+                    .catch(() => writeLog("Gagal terhubung ke Backend Server.", "error"));
             }
         }
 
@@ -504,7 +514,7 @@
                 modeBadge.innerText = "● Sesi Database Terpusat Terhubung";
                 modeBadge.className = "text-[10px] text-blue-400 font-mono block -mt-1";
                 statusIcon.className = "bg-blue-500/10 text-blue-400 w-10 h-10 rounded-xl flex items-center justify-center mb-4 border border-blue-500/20 shadow-inner";
-                welcomeDesc.innerHTML = 'Anda berhasil masuk menggunakan <span class="text-zinc-200 font-mono">Metode Sentralisasi</span>. Kredensial divalidasi penuh oleh skrip server backend dan record data SQL terpusat.';
+                welcomeDesc.innerHTML = 'Anda berhasil masuk menggunakan <span class="text-zinc-200 font-mono">Metode Konversional</span>. Kredensial divalidasi penuh oleh skrip server backend dan record data SQL terpusat.';
                 protocol.innerText = "Standard Password Hash Verification";
                 protocol.className = "bg-zinc-950 text-blue-400 border border-blue-500/20 text-[10px] px-2 rounded-md font-mono";
                 layer.innerText = "Relational Database Server (MySQL)";
